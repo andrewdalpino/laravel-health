@@ -2,6 +2,7 @@
 
 namespace AndrewDalpino\LaravelHealth;
 
+use AndrewDalpino\LaravelHealth\HealthManager;
 use AndrewDalpino\LaravelHealth\Tests\DatabaseConnectionTest;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,7 +23,7 @@ class LaravelHealthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/Config/health.php' => config_path('health.php'),
+            __DIR__ . '/Config/health.php' => $this->config_path('health.php'),
         ]);
 
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
@@ -43,6 +44,17 @@ class LaravelHealthServiceProvider extends ServiceProvider
 
         $this->app->alias(HealthManager::class, 'health_manager');
     }
+
+    /**
+     * Get the configuration path.
+     *
+     * @param  string  $path
+     * @return string
+     */
+     protected function config_path($path = '')
+     {
+         return app()->basePath() . '/config' . ($path ? '/' . $path : $path);
+     }
 
     /**
      * Get the services provided by the provider.
