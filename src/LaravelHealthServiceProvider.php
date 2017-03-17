@@ -25,8 +25,8 @@ class LaravelHealthServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Config/health.php' => $this->config_path('health.php'),
         ]);
-
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        
+        include __DIR__ . '/routes.php';
     }
 
     /**
