@@ -4,7 +4,7 @@ namespace AndrewDalpino\LaravelHealth;
 
 use Illuminate\Support\Facades\Facade;
 
-class HealthManager extends Facade
+class HealthManagerFacade extends Facade
 {
     /**
      * Get the binding in the IoC container
