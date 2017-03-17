@@ -3,7 +3,6 @@
 namespace AndrewDalpino\LaravelHealth;
 
 use AndrewDalpino\LaravelHealth\Tests\HealthTest;
-use AndrewDalpino\LaravelHealth\HealthCheckResult;
 
 class HealthManager
 {
@@ -25,25 +24,44 @@ class HealthManager
     public function __construct(array $tests)
     {
         foreach ($tests as $test) {
-            if ($test instanceof HealthTest) {
-                $this->tests[] = $test;
-            }
+            $this->queueTest($test);
         }
     }
 
     /**
-     * Run the health tests.
+     * Queue up a test.
+     *
+     * @param  \AndrewDalpino\LaravelHealth\Tests\HealthTest  $test
+     * @return void
+     */
+    public function queueTest(HealthTest $test)
+    {
+        $this->tests[] = $test;
+    }
+
+    /**
+     * Run the health tests and generate a report.
      *
      * @return \AndrewDalpino\LaravelHealth\HealthCheckResult
      */
     public function check()
     {
-        $result = new HealthCheckResult();
+        $report = new HealthCheckReport();
 
         foreach ($this->tests as $test) {
-            $result->addResult($test->name(), $test->run());
+            try {
+                $start = microtime(true);
+
+                $result = $test->run();
+
+                $millis = round((microtime(true) - $start) * 1000);
+
+                $report->addResult($test->name(), $result['value'], $result['passed'], $millis);
+            } catch (\Exception $e) {
+                //
+            }
         }
 
-        return $result;
+        return $report;
     }
 }

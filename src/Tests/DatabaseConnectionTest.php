@@ -34,6 +34,13 @@ class DatabaseConnectionTest extends BaseTester
      */
     public function run()
     {
-        return $this->database->connection() ? true : false;
+        $connection = $this->database->getDefaultConnection();
+
+        $passed = $this->database->connection() ? true : false;
+
+        return [
+            'value' => $connection,
+            'passed' => $passed,
+        ];
     }
 }

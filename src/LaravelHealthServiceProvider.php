@@ -4,6 +4,8 @@ namespace AndrewDalpino\LaravelHealth;
 
 use AndrewDalpino\LaravelHealth\HealthManager;
 use AndrewDalpino\LaravelHealth\Tests\DatabaseConnectionTest;
+use AndrewDalpino\LaravelHealth\Tests\ServerLoadTest;
+use AndrewDalpino\LaravelHealth\Tests\FreeDiskSpaceTest;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelHealthServiceProvider extends ServiceProvider
@@ -23,10 +25,8 @@ class LaravelHealthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/Config/health.php' => $this->config_path('health.php'),
+            __DIR__ . '/config/health.php' => $this->configPath('health.php'),
         ]);
-        
-        include __DIR__ . '/routes.php';
     }
 
     /**
@@ -38,7 +38,9 @@ class LaravelHealthServiceProvider extends ServiceProvider
     {
         $this->app->singleton(HealthManager::class, function ($app) {
             return new HealthManager([
-                new DatabaseConnectionTest($app['db'])
+                new DatabaseConnectionTest($app['db']),
+                new ServerLoadTest(),
+                new FreeDiskSpaceTest()
             ]);
         });
 
@@ -51,7 +53,7 @@ class LaravelHealthServiceProvider extends ServiceProvider
      * @param  string  $path
      * @return string
      */
-     protected function config_path($path = '')
+     protected function configPath($path = '')
      {
          return app()->basePath() . '/config' . ($path ? '/' . $path : $path);
      }
