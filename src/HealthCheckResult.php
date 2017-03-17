@@ -19,7 +19,7 @@ class HealthCheckResult
      * @param  array  $results
      * @return void
      */
-    public function __construct(array $results)
+    public function __construct(array $results = [])
     {
         foreach ($results as $result) {
             $this->addResult($result['name'], $result['passed']);
