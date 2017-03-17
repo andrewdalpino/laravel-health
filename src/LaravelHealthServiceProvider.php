@@ -24,9 +24,7 @@ class LaravelHealthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/config/health.php' => $this->configPath('health.php'),
-        ]);
+        //
     }
 
     /**
@@ -46,17 +44,6 @@ class LaravelHealthServiceProvider extends ServiceProvider
 
         $this->app->alias(HealthManager::class, 'health_manager');
     }
-
-    /**
-     * Get the configuration path.
-     *
-     * @param  string  $path
-     * @return string
-     */
-     protected function configPath($path = '')
-     {
-         return app()->basePath() . '/config' . ($path ? '/' . $path : $path);
-     }
 
     /**
      * Get the services provided by the provider.
